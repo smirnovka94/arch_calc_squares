@@ -1,0 +1,37 @@
+{% extends 'apartments/base.html' %}
+
+{% block content %}
+
+<div class="pricing-header px-3 py-2 pt-md-5 pb-md-4 mx-auto text-center">
+    <h4 class="display-4">Название    Количество   Общая площадь квартир</h4>
+    <h4 class="display-4">Общее    {{count}}   {{cumm}}</h2>
+    <h4 class="display-4">Студии    {{count_s}}   {{cumm_s}}</h2>
+    <h4 class="display-4">1kk    {{count_1}}   {{cumm_1}}</h4>
+    <h4 class="display-4">2kk    {{count_2}}   {{cumm_2}}</h4>
+    <h4 class="display-4">3kk    {{count_3}}   {{cumm_3}}</h4>
+</div>
+
+<div class="col=12 mb-5">
+    <a class="btn btn-outline-primary" href="{% url 'apartments:section_create' %}">Создать новую секцию</a>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+        {% for object in object_list %}
+            <div class="col-3">
+                <div class="card-body">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header">
+                            <h1 class="my-0 font-weight-normal">{{object.name}}</h1>
+                            <div class="card-body">
+                                <button type="button" class="btw btn-sm btn-outline-secondary">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

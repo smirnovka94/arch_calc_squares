@@ -24,7 +24,7 @@ class Apartment(models.Model):
     Section = models.ForeignKey(Section, on_delete=models.CASCADE, verbose_name='Секция')
 
     def __str__(self):
-        return self.name
+        return self.type
 
     class Meta:
         verbose_name = 'Квартира'
