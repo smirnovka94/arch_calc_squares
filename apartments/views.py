@@ -157,3 +157,14 @@ class ApartmentCreateView(CreateView):
     model = Apartment
     fields = '__all__'
     success_url = reverse_lazy('apartments:index')
+
+
+class ApartmentUpdateView(UpdateView):
+    model = Apartment
+    fields = '__all__'
+    success_url = reverse_lazy('apartments:index')
+
+
+class ApartmentDeleteView(DeleteView):
+    model = Apartment
+    success_url = reverse_lazy('apartments:index')

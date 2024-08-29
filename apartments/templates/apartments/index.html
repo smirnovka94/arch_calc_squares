@@ -61,7 +61,7 @@
             <div class="col-4">
                 <div class="card mb-4 box-shadow">
                     <div class="card-header">
-                        <h4 class="my-0 font-weight-normal">{{object.name}} - ({{object.number}}эт)</h4>
+                        <a href="{% url 'apartments:s_edit' pk=object.pk %}" class="my-0 font-weight-normal" >{{object.name}} - ({{object.number}}эт)</a>
                     </div>
                     <div class="card-body">
                         <table class="table">
@@ -76,16 +76,19 @@
                             <tbody>
                                 {% for apartment in object.apartment_set.all %}
                                     <tr>
+
                                         <th scope="col">{{ apartment.type }}</th>
                                         <td>{{ apartment.small_square }}</td>
                                         <td>{{ apartment.shortened_square }}</td>
                                         <td>{{ apartment.full_square }}</td>
+                                        <td> <a href="{% url 'apartments:a_edit' pk=apartment.pk %}"</a>✎</td>
+                                        <td> <a href="{% url 'apartments:a_delete' pk=apartment.pk %}"</a>❌</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
 
-                        <a href="{% url 'apartments:delete' pk=object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Удалить</a>
+                        <a href="{% url 'apartments:s_delete' pk=object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Удалить секцию</a>
                     </div>
                 </div>
             </div>
