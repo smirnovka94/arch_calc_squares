@@ -1,0 +1,10 @@
+<h1>Секция: {{ section.name }}</h1>
+<p>Номер: {{ section.number }}</p>
+<h2>Квартиры:</h2>
+<ul>
+    {% for apartment in apartments %}
+<li>{{ apartment.type }} - м²</li>
+    {% empty %}
+        <li>Квартир нет</li>
+    {% endfor %}
+</ul>

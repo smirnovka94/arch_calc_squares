@@ -1,0 +1,27 @@
+{% extends 'apartments/index.html' %}
+
+{% block content %}
+    <div class="col-12 mb-5">
+        <a class="btn btn-outline-primary" href="{% url 'apartments:s_create' %}">Добавить секцию</a>
+    </div>
+    <div class="row text-center">
+        {% for section in sections %}
+            <div class="col-3">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{ section.name }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                        {% for apartment in section.apartment_set.all %}
+                            <li>{{ apartment.type }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}

@@ -3,35 +3,93 @@
 {% block content %}
 
 <div class="pricing-header px-3 py-2 pt-md-5 pb-md-4 mx-auto text-center">
-    <h4 class="display-4">Название    Количество   Общая площадь квартир</h4>
-    <h4 class="display-4">Общее    {{count}}   {{cumm}}</h2>
-    <h4 class="display-4">Студии    {{count_s}}   {{cumm_s}}</h2>
-    <h4 class="display-4">1kk    {{count_1}}   {{cumm_1}}</h4>
-    <h4 class="display-4">2kk    {{count_2}}   {{cumm_2}}</h4>
-    <h4 class="display-4">3kk    {{count_3}}   {{cumm_3}}</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Название</th>
+                <th scope="col">Количество</th>
+                <th scope="col">Площадь без летних</th>
+                <th scope="col">Площадь с п.коэфициентами</th>
+                <th scope="col">Площадь без коэфициентов</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Студии</th>
+                <td>{{s_count}}</td>
+                <td>{{s_small_square}}</td>
+                <td>{{s_shortened_square}}</td>
+                <td>{{s_full_square}}</td>
+            </tr>
+            <tr>
+                <th>1KK</th>
+                <td>{{1kk_count}}</td>
+                <td>{{1kk_small_square}}</td>
+                <td>{{1kk_shortened_square}}</td>
+                <td>{{1kk_full_square}}</td>
+            </tr>
+            <tr>
+                <th>2KK</th>
+                <td>{{2kk_count}}</td>
+                <td>{{2kk_small_square}}</td>
+                <td>{{2kk_shortened_square}}</td>
+                <td>{{2kk_full_square}}</td>
+            </tr>
+            <tr>
+                <th>3KK</th>
+                <td>{{3kk_count}}</td>
+                <td>{{3kk_small_square}}</td>
+                <td>{{3kk_shortened_square}}</td>
+                <td>{{3kk_full_square}}</td>
+            </tr>
+            <tr>
+                <th class="table-dark">ИТОГО</th>
+                <td class="table-dark">{{sum_count}}</td>
+                <td class="table-dark">{{sum_small_square}}</td>
+                <td class="table-dark">{{sum_shortened_square}}</td>
+                <td class="table-dark">{{sum_full_square}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-<div class="col=12 mb-5">
-    <a class="btn btn-outline-primary" href="{% url 'apartments:section_create' %}">Создать новую секцию</a>
-</div>
+
 
 <div class="container">
     <div class="row text-center">
         {% for object in object_list %}
-            <div class="col-3">
-                <div class="card-body">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-header">
-                            <h1 class="my-0 font-weight-normal">{{object.name}}</h1>
-                            <div class="card-body">
-                                <button type="button" class="btw btn-sm btn-outline-secondary">Сохранить</button>
-                            </div>
-                        </div>
+            <div class="col-4">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{object.name}} - ({{object.number}}эт)</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Тип</th>
+                                    <th scope="col">S без ЛП</th>
+                                    <th scope="col">S ЛП(k)</th>
+                                    <th scope="col">S ЛП</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for apartment in object.apartment_set.all %}
+                                    <tr>
+                                        <th scope="col">{{ apartment.type }}</th>
+                                        <td>{{ apartment.small_square }}</td>
+                                        <td>{{ apartment.shortened_square }}</td>
+                                        <td>{{ apartment.full_square }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <a href="{% url 'apartments:delete' pk=object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Удалить</a>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
-
 </div>
 {% endblock %}

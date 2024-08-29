@@ -1,0 +1,29 @@
+{% extends 'apartments/index.html' %}
+
+{% block content %}
+    <div class="col-12 mb-5">
+        <a class="btn btn-outline-primary" href="{% url 'apartments:create' %}">Добавить секцию</a>
+    </div>
+    <div class="row text-center">
+        {% for object in object_list %}
+            <div class="col-3">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{object.name}}</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li>{{object.content|slice:":10"}}...</li>
+                            <li>{{object.create_data}}</li>
+                            <li>{{object.count_view}}</li>
+                        </ul>
+                        <a href="{% url 'apartments:edit' pk=object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Изменить</a>
+                        <a href="{% url 'apartments:delete' pk=object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Удалить</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}

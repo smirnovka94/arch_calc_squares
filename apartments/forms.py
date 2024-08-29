@@ -1,18 +1,45 @@
 from django import forms
-from django.forms import inlineformset_factory
+# from django.forms import inlineformset_factory
 from apartments.models import Section, Apartment
 
+"""
 
 class ApartmentForm(forms.ModelForm):
     class Meta:
         model = Apartment
-        fields = ['type', 'number', 'small_square', 'shortened_square', 'full_square']
-
+        fields = ['type']  # Укажите необходимые поля
 
 class SectionForm(forms.ModelForm):
     class Meta:
         model = Section
         fields = ['name', 'number']
 
-ApartmentFormSet = inlineformset_factory(Section, Apartment, form=ApartmentForm, extra=1)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apartment_forms = [ApartmentForm(prefix=f'apartment_{i}') for i in range(1)]
+
+    def save(self, commit=True):
+        section = super().save(commit=commit)
+        if commit:
+            section.save()
+            for form in self.apartment_forms:
+                apartment = form.save(commit=False)
+                apartment.section = section  # Устанавливаем связь с Section
+                apartment.save()
+        return section
+
+
+"""
+class ApartmentForm(forms.ModelForm):
+    class Meta:
+        model = Apartment
+        fields = '__all__'
+
+
+class SectionForm(forms.ModelForm):
+    class Meta:
+        model = Section
+        fields = '__all__'
+
+
 
