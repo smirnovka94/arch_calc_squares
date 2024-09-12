@@ -57,31 +57,31 @@ def index(request):
     sum_full_square = s_full_square + k_full_square + kk_full_square + kkk_full_square
 
 
-    a_s_count =  Apartment.objects.filter(type="s").count()
-    # a_s_small_square =  Apartment.objects.filter(type="s").aggregate(total=Sum('small_square'))['total'] or 0
-    # a_s_shortened_square =  Apartment.objects.filter(type="s").aggregate(total=Sum('shortened_square'))['total'] or 0
-    # a_s_full_square =  Apartment.objects.filter(type="s").aggregate(total=Sum('full_square'))['total'] or 0
+    a_s_count = Apartment.objects.filter(type="s").count()
+    # a_s_small_square = Apartment.objects.filter(type="s").aggregate(total=Sum('small_square'))['total'] or 0
+    # a_s_shortened_square = Apartment.objects.filter(type="s").aggregate(total=Sum('shortened_square'))['total'] or 0
+    # a_s_full_square = Apartment.objects.filter(type="s").aggregate(total=Sum('full_square'))['total'] or 0
 
-    a_1kk_count =  Apartment.objects.filter(type="1kk").count(),
-    # a_1kk_small_square =  Apartment.objects.filter(type="1kk").aggregate(total=Sum('small_square'))['total'] or 0
-    a_1kk_shortened_square =  Apartment.objects.filter(type="1kk").aggregate(total=Sum('shortened_square'))['total'] or 0
-    a_1kk_full_square =  Apartment.objects.filter(type="1kk").aggregate(total=Sum('full_square'))['total'] or 0
+    a_1kk_count = Apartment.objects.filter(type="1kk").count(),
+    # a_1kk_small_square = Apartment.objects.filter(type="1kk").aggregate(total=Sum('small_square'))['total'] or 0
+    a_1kk_shortened_square = Apartment.objects.filter(type="1kk").aggregate(total=Sum('shortened_square'))['total'] or 0
+    a_1kk_full_square = Apartment.objects.filter(type="1kk").aggregate(total=Sum('full_square'))['total'] or 0
 
-    a_2kk_count =  Apartment.objects.filter(type="2kk").count()
-    # a_2kk_small_square =  Apartment.objects.filter(type="2kk").aggregate(total=Sum('small_square'))['total'] or 0
-    a_2kk_shortened_square =  Apartment.objects.filter(type="2kk").aggregate(total=Sum('shortened_square'))['total'] or 0
-    a_2kk_full_square =  Apartment.objects.filter(type="2kk").aggregate(total=Sum('full_square'))['total'] or 0
+    a_2kk_count = Apartment.objects.filter(type="2kk").count()
+    # a_2kk_small_square = Apartment.objects.filter(type="2kk").aggregate(total=Sum('small_square'))['total'] or 0
+    a_2kk_shortened_square = Apartment.objects.filter(type="2kk").aggregate(total=Sum('shortened_square'))['total'] or 0
+    a_2kk_full_square = Apartment.objects.filter(type="2kk").aggregate(total=Sum('full_square'))['total'] or 0
 
-    a_3kk_count =  Apartment.objects.filter(type="3kk").count()
-    # a_3kk_small_square =  Apartment.objects.filter(type="3kk").aggregate(total=Sum('small_square'))['total'] or 0
-    a_3kk_shortened_square =  Apartment.objects.filter(type="3kk").aggregate(total=Sum('shortened_square'))['total'] or 0
-    a_3kk_full_square =  Apartment.objects.filter(type="3kk").aggregate(total=Sum('full_square'))['total'] or 0
+    a_3kk_count = Apartment.objects.filter(type="3kk").count()
+    # a_3kk_small_square = Apartment.objects.filter(type="3kk").aggregate(total=Sum('small_square'))['total'] or 0
+    a_3kk_shortened_square = Apartment.objects.filter(type="3kk").aggregate(total=Sum('shortened_square'))['total'] or 0
+    a_3kk_full_square = Apartment.objects.filter(type="3kk").aggregate(total=Sum('full_square'))['total'] or 0
 
-    a_sum_count =  Apartment.objects.count()
-    # a_sum_small_square =  Apartment.objects.aggregate(total=Sum('small_square'))['total'] or 0
-    a_sum_shortened_square =  Apartment.objects.aggregate(total=Sum('shortened_square'))[
+    a_sum_count = Apartment.objects.count()
+    # a_sum_small_square = Apartment.objects.aggregate(total=Sum('small_square'))['total'] or 0
+    a_sum_shortened_square = Apartment.objects.aggregate(total=Sum('shortened_square'))[
                                 'total'] or 0
-    # sum_full_square =  Apartment.objects.aggregate(total=Sum('full_square'))['total'] or 0
+    # sum_full_square = Apartment.objects.aggregate(total=Sum('full_square'))['total'] or 0
 
     context = {
         'object_list': Section.objects.all().order_by('name'),
