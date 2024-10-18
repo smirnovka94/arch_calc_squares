@@ -1,6 +1,6 @@
 from django import forms
 # from django.forms import inlineformset_factory
-from apartments.models import Section, Apartment
+from apartments.models import Section, Apartment, Floor
 
 """
 
@@ -28,18 +28,22 @@ class SectionForm(forms.ModelForm):
                 apartment.save()
         return section
 
-
 """
+
 class ApartmentForm(forms.ModelForm):
     class Meta:
         model = Apartment
-        fields = '__all__'
+        exclude = ('creator', )
+
+
+class FloorForm(forms.ModelForm):
+    class Meta:
+        model = Floor
+        exclude = ('creator', )
 
 
 class SectionForm(forms.ModelForm):
     class Meta:
         model = Section
-        fields = '__all__'
-
-
-
+        exclude = ('creator', )
+        

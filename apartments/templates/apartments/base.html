@@ -11,19 +11,25 @@
 
 <body>
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-    <h1 class="my-0 mr-md-auto font-weight-normal">ТЭП Квартирография</h1>
-    <a class="btn btn-outline-primary" href="{% url 'apartments:s_create' %}">Создать секцию</a>
-    <a class="btn btn-outline-primary" href="{% url 'apartments:a_create' %}">Создать квартиру</a>
-    <a class="btn btn-outline-primary" href="{% url 'admin:index' %}">Администрирование</a>
-
+    <h1 class="my-0 mr-md-auto font-weight-normal">Пользователь: {{user}}</h1>
+    <a class="btn btn-outline-primary" href="{% url 'apartments:index' %}">На главную</a>
+    {% if user.is_authenticated %}
+        <a class="btn btn-outline-primary" href="{% url 'apartments:p_list' %}">Мои проекты</a>
+        <a class="btn btn-outline-primary" href="{% url 'apartments:p_create' %}">Новый проект</a>
+        <a class="btn btn-outline-primary" href="{% url 'apartments:s_create' %}">Создать секцию</a>
+        <a class="btn btn-outline-primary" href="{% url 'apartments:f_create' %}">Создать этаж</a>
+        <a class="btn btn-outline-primary" href="{% url 'apartments:a_create' %}">Создать квартиру</a>
+        <a class="btn btn-outline-primary" href="{% url 'users:logout' %}">Выход</a>
+    {% else %}
+        <a class="btn btn-outline-primary" href="{% url 'users:login' %}">Вход</a>
+        <a class="btn btn-outline-primary" href="{% url 'users:register' %}">Регистрация</a>
+    {% endif %}
 </div>
 
 
 
 {% block content %}
 {% endblock %}
-
-
 
 
 <script src="/static/js/bootstrap.bundle.min.js"></script>
