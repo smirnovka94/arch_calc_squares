@@ -4,31 +4,20 @@
     <div class="col-12 mb-5">
         <a class="btn btn-outline-primary" href="{% url 'apartments:p_create' %}">Добавить проект</a>
     </div>
-    <div class="container mt-4">
-        <h2>Импорт данных из Excel</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="excelFile">Выберите файл Excel:</label>
-                <input type="file" class="form-control-file" id="excelFile" name="excel_file" accept=".xls, .xlsx" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Импортировать данные</button>
-        </form>
-    </div>
-
     <div class="container">
         <div class="row text-center">
             {% for project in projects %}
+                {% if project.creator == user %}
                     <div class="col-4">
                         <div class="card mb-4 box-shadow">
                             <div class="card-header">
                                 <a href="{% url 'apartments:p_view' pk=project.pk %}" class="my-0 font-weight-bold">{{ project.name }}</a>
                                 {% if project.creator == user %}
-                                <a href="{% url 'apartments:p_delete' pk=project.pk %}">❌</a>
-                                <form method="post" action="{% url 'apartments:project_duplicate' project.pk %}">
-                                    {% csrf_token %}
-                                    <button type="submit">+</button>
-                                </form>
+                                    <a href="{% url 'apartments:p_delete' pk=project.pk %}">❌</a>
+                                    <form method="post" action="{% url 'apartments:project_duplicate' project.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit">+</button>
+                                    </form>
                                 {% endif %}
                             </div>
                             <div class="card-body">
@@ -54,6 +43,7 @@
                             </div>
                         </div>
                     </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
