@@ -5,121 +5,128 @@
 
 <div class="row text-center">
     <div class="col-12">
-        <div class="card mb-4 box-shadow">
-            <div class="card-header">
-                <h1>{{ project.name }}</h1>
-                {% if project.creator == user %}
+        <div class="d-flex justify-content-center align-items-center">
+            <h1 class="me-2">{{ project.name }}</h1>
+            {% if project.creator == user %}
+                <div>
                     <a href="{% url 'apartments:p_edit' pk=project.pk %}">✎</a>
                     <a href="{% url 'apartments:p_delete' pk=project.pk %}">❌</a>
-
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
 
-
-<div class="pricing-header px-3 py-2 pt-md-5 pb-md-4 mx-auto text-center">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Название</th>
-                <th scope="col">Количество</th>
-                <th scope="col">Площадь жилая</th>
-                <th scope="col">Площадь без летних</th>
-                <th scope="col">Площадь с п.коэфициентами</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if project.sum_s_count_project != 0 %}
-            <tr>
-                <th class="table-danger">Студии</th>
-                <td class="table-danger">{{ project.sum_s_count_project }}</td>
-                <td class="table-danger">{{ project.sum_s_small_square_project }}</td>
-                <td class="table-danger">{{ project.sum_s_shortened_square_project }}</td>
-                <td class="table-danger">{{ project.sum_s_full_square_project }}</td>
-            </tr>
-            {% endif %}
-            {% if project.sum_k_count_project != 0 %}
-            <tr>
-                <th class="table-primary">1KK</th>
-                <td class="table-primary">{{ project.sum_k_count_project }}</td>
-                <td class="table-primary">{{ project.sum_k_small_square_project }}</td>
-                <td class="table-primary">{{ project.sum_k_shortened_square_project }}</td>
-                <td class="table-primary">{{ project.sum_k_full_square_project }}</td>
-            </tr>
-            {% endif %}
-            {% if project.sum_kk_count_project != 0 %}
-            <tr>
-                <th class="table-warning">2KK</th>
-                <td class="table-warning">{{ project.sum_kk_count_project }}</td>
-                <td class="table-warning">{{ project.sum_kk_small_square_project }}</td>
-                <td class="table-warning">{{ project.sum_kk_shortened_square_project }}</td>
-                <td class="table-warning">{{ project.sum_kk_full_square_project }}</td>
-            </tr>
-            {% endif %}
-            {% if project.sum_kkk_count_project != 0 %}
-            <tr>
-                <th class="table-success">3KK</th>
-                <td class="table-success">{{ project.sum_kkk_count_project }}</td>
-                <td class="table-success">{{ project.sum_kkk_small_square_project }}</td>
-                <td class="table-success">{{ project.sum_kkk_shortened_square_project }}</td>
-                <td class="table-success">{{ project.sum_kkk_full_square_project }}</td>
-            </tr>
-            {% endif %}
-            {% if project.sum_kkkk_count_project != 0 %}
-            <tr>
-                <th style="background-color: #FFBD88">4KK</th>
-                <td style="background-color: #FFBD88">{{ project.sum_kkkk_count_project }}</td>
-                <td style="background-color: #FFBD88">{{ project.sum_kkkk_small_square_project }}</td>
-                <td style="background-color: #FFBD88">{{ project.sum_kkkk_shortened_square_project }}</td>
-                <td style="background-color: #FFBD88">{{ project.sum_kkkk_full_square_project }}</td>
-            </tr>
-            {% endif %}
-            {% if project.sum_kkkkk_count_project != 0 %}
-            <tr>
-                <th style="background-color: #D5DBFB">5KK</th>
-                <td style="background-color: #D5DBFB">{{ project.sum_kkkkk_count_project }}</td>
-                <td style="background-color: #D5DBFB">{{ project.sum_kkkkk_small_square_project }}</td>
-                <td style="background-color: #D5DBFB">{{ project.sum_kkkkk_shortened_square_project }}</td>
-                <td style="background-color: #D5DBFB">{{ project.sum_kkkkk_full_square_project }}</td>
-            </tr>
-            {% endif %}
-            {% if project.sum_kkkkkk_count_project != 0 %}
-            <tr>
-                <th style="background-color: #EDD1EB">6KK</th>
-                <td style="background-color: #EDD1EB">{{ project.sum_kkkkkk_count_project }}</td>
-                <td style="background-color: #EDD1EB">{{ project.sum_kkkkkk_small_square_project }}</td>
-                <td style="background-color: #EDD1EB">{{ project.sum_kkkkkk_shortened_square_project }}</td>
-                <td style="background-color: #EDD1EB">{{ project.sum_kkkkkk_full_square_project }}</td>
-            </tr>
-            {% endif %}
-            {% if project.sum_kkkkkkk_count_project != 0 %}
-            <tr>
-                <th style="background-color: #FFF68C">7KK</th>
-                <td style="background-color: #FFF68C">{{ project.sum_kkkkkkk_count_project }}</td>
-                <td style="background-color: #FFF68C">{{ project.sum_kkkkkkk_small_square_project }}</td>
-                <td style="background-color: #FFF68C">{{ project.sum_kkkkkkk_shortened_square_project }}</td>
-                <td style="background-color: #FFF68C">{{ project.sum_kkkkkkk_full_square_project }}</td>
-            </tr>
-            {% endif %}
-            <tr>
-                <th class="table-dark">ИТОГО</th>
-                <td class="table-dark">{{ project.sum_count_project }}</td>
-                <td class="table-dark">{{ project.sum_small_square_project }}</td>
-                <td class="table-dark">{{ project.sum_shortened_square_project }}</td>
-                <td class="table-dark">{{ project.sum_full_square_project }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="row text-center">
+    <div class="col-8">
+        <div class="pricing-header px-3 py-2 pt-md-5 pb-md-4 mx-auto text-center">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Название</th>
+                        <th scope="col">Количество</th>
+                        <th scope="col">Площадь жилая</th>
+                        <th scope="col">Площадь без летних</th>
+                        <th scope="col">Площадь с п.коэфициентами</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if project.sum_s_count_project != 0 %}
+                    <tr>
+                        <th class="table-danger">Студии</th>
+                        <td class="table-danger">{{ project.sum_s_count_project }}</td>
+                        <td class="table-danger">{{ project.sum_s_small_square_project }}</td>
+                        <td class="table-danger">{{ project.sum_s_shortened_square_project }}</td>
+                        <td class="table-danger">{{ project.sum_s_full_square_project }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if project.sum_k_count_project != 0 %}
+                    <tr>
+                        <th class="table-primary">1KK</th>
+                        <td class="table-primary">{{ project.sum_k_count_project }}</td>
+                        <td class="table-primary">{{ project.sum_k_small_square_project }}</td>
+                        <td class="table-primary">{{ project.sum_k_shortened_square_project }}</td>
+                        <td class="table-primary">{{ project.sum_k_full_square_project }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if project.sum_kk_count_project != 0 %}
+                    <tr>
+                        <th class="table-warning">2KK</th>
+                        <td class="table-warning">{{ project.sum_kk_count_project }}</td>
+                        <td class="table-warning">{{ project.sum_kk_small_square_project }}</td>
+                        <td class="table-warning">{{ project.sum_kk_shortened_square_project }}</td>
+                        <td class="table-warning">{{ project.sum_kk_full_square_project }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if project.sum_kkk_count_project != 0 %}
+                    <tr>
+                        <th class="table-success">3KK</th>
+                        <td class="table-success">{{ project.sum_kkk_count_project }}</td>
+                        <td class="table-success">{{ project.sum_kkk_small_square_project }}</td>
+                        <td class="table-success">{{ project.sum_kkk_shortened_square_project }}</td>
+                        <td class="table-success">{{ project.sum_kkk_full_square_project }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if project.sum_kkkk_count_project != 0 %}
+                    <tr>
+                        <th style="background-color: #FFBD88">4KK</th>
+                        <td style="background-color: #FFBD88">{{ project.sum_kkkk_count_project }}</td>
+                        <td style="background-color: #FFBD88">{{ project.sum_kkkk_small_square_project }}</td>
+                        <td style="background-color: #FFBD88">{{ project.sum_kkkk_shortened_square_project }}</td>
+                        <td style="background-color: #FFBD88">{{ project.sum_kkkk_full_square_project }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if project.sum_kkkkk_count_project != 0 %}
+                    <tr>
+                        <th style="background-color: #D5DBFB">5KK</th>
+                        <td style="background-color: #D5DBFB">{{ project.sum_kkkkk_count_project }}</td>
+                        <td style="background-color: #D5DBFB">{{ project.sum_kkkkk_small_square_project }}</td>
+                        <td style="background-color: #D5DBFB">{{ project.sum_kkkkk_shortened_square_project }}</td>
+                        <td style="background-color: #D5DBFB">{{ project.sum_kkkkk_full_square_project }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if project.sum_kkkkkk_count_project != 0 %}
+                    <tr>
+                        <th style="background-color: #EDD1EB">6KK</th>
+                        <td style="background-color: #EDD1EB">{{ project.sum_kkkkkk_count_project }}</td>
+                        <td style="background-color: #EDD1EB">{{ project.sum_kkkkkk_small_square_project }}</td>
+                        <td style="background-color: #EDD1EB">{{ project.sum_kkkkkk_shortened_square_project }}</td>
+                        <td style="background-color: #EDD1EB">{{ project.sum_kkkkkk_full_square_project }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if project.sum_kkkkkkk_count_project != 0 %}
+                    <tr>
+                        <th style="background-color: #FFF68C">7KK</th>
+                        <td style="background-color: #FFF68C">{{ project.sum_kkkkkkk_count_project }}</td>
+                        <td style="background-color: #FFF68C">{{ project.sum_kkkkkkk_small_square_project }}</td>
+                        <td style="background-color: #FFF68C">{{ project.sum_kkkkkkk_shortened_square_project }}</td>
+                        <td style="background-color: #FFF68C">{{ project.sum_kkkkkkk_full_square_project }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <th class="table-dark">ИТОГО</th>
+                        <td class="table-dark">{{ project.sum_count_project }}</td>
+                        <td class="table-dark">{{ project.sum_small_square_project }}</td>
+                        <td class="table-dark">{{ project.sum_shortened_square_project }}</td>
+                        <td class="table-dark">{{ project.sum_full_square_project }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-4">
+        <div style="margin-top: 50px;">
+            <a class="btn btn-outline-primary" href="{% url 'apartments:export_excel' %}">Экспортировать данные</a>
+            <a class="btn btn-outline-primary" href="{% url 'apartments:import_excel' %}">Импортировать данные</a>
+        </div>
+    </div>
 </div>
-
 
     <div class="row text-center">
         {% for section in project.sections.all|sort_list_by_name %}
             {% if section.creator == user %}
-                <div class="col-4">
+                <div class="col-12 col-sm-6 col-md-4">
                     <div class="card mb-4 box-shadow">
                         <div class="card-header">
                             <a href="{% url 'apartments:s_edit' pk=section.pk %}" class="my-0 font-weight-bold">{{section.name|after_last_underscore}} - ({{section.sum_floors}}эт)</a>
@@ -147,7 +154,11 @@
                                             <td class="table-secondary">{{ floor.count_floor }}
                                                 <form method="post" action="{% url 'apartments:floor_duplicate' floor.pk %}">
                                                     {% csrf_token %}
-                                                    <button type="submit">+</button>
+                                                    <button type="submit">Эт+</button>
+                                                </form>
+                                                <form method="post" action="{% url 'apartments:apartment_default' floor.pk %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit">Кв+</button>
                                                 </form>
                                             </td>
                                             <td style="background-color: #f0f0f0; font-weight: bold">{{ floor.name|after_last_underscore }}</td>

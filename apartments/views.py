@@ -5,9 +5,13 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
-from django.shortcuts import render, redirect
 from apartments.models import Project, Section, Apartment, Floor
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.storage import FileSystemStorage
+from django.contrib import messages
+from django.shortcuts import redirect
+from apartments.forms import UploadFileForm
+from django.db.models import Max
 
 def index(request):
     sections = Section.objects.all()
@@ -51,30 +55,6 @@ def index(request):
     sum_small_square = s_small_square + k_small_square + kk_small_square + kkk_small_square
     sum_shortened_square = s_shortened_square + k_shortened_square + kk_shortened_square + kkk_shortened_square
     sum_full_square = s_full_square + k_full_square + kk_full_square + kkk_full_square
-
-
-    # a_s_count = Apartment.objects.filter(type="s").count()
-    #
-    # a_1kk_count = Apartment.objects.filter(type="1kk").count()
-    # # a_1kk_small_square = Apartment.objects.filter(type="1kk").aggregate(total=Sum('small_square'))['total'] or 0
-    # a_1kk_shortened_square = Apartment.objects.filter(type="1kk").aggregate(total=Sum('shortened_square'))['total'] or 0
-    # a_1kk_full_square = Apartment.objects.filter(type="1kk").aggregate(total=Sum('full_square'))['total'] or 0
-    #
-    # a_2kk_count = Apartment.objects.filter(type="2kk").count()
-    # # a_2kk_small_square = Apartment.objects.filter(type="2kk").aggregate(total=Sum('small_square'))['total'] or 0
-    # a_2kk_shortened_square = Apartment.objects.filter(type="2kk").aggregate(total=Sum('shortened_square'))['total'] or 0
-    # a_2kk_full_square = Apartment.objects.filter(type="2kk").aggregate(total=Sum('full_square'))['total'] or 0
-    #
-    # a_3kk_count = Apartment.objects.filter(type="3kk").count()
-    # # a_3kk_small_square = Apartment.objects.filter(type="3kk").aggregate(total=Sum('small_square'))['total'] or 0
-    # a_3kk_shortened_square = Apartment.objects.filter(type="3kk").aggregate(total=Sum('shortened_square'))['total'] or 0
-    # a_3kk_full_square = Apartment.objects.filter(type="3kk").aggregate(total=Sum('full_square'))['total'] or 0
-    #
-    # a_sum_count = Apartment.objects.count()
-    # # a_sum_small_square = Apartment.objects.aggregate(total=Sum('small_square'))['total'] or 0
-    # a_sum_shortened_square = Apartment.objects.aggregate(total=Sum('shortened_square'))[
-    #                             'total'] or 0
-    # # sum_full_square = Apartment.objects.aggregate(total=Sum('full_square'))['total'] or 0
 
     projects = Project.objects.all()
 
@@ -279,22 +259,6 @@ class SectionDuplicateView(LoginRequiredMixin, View):
         # Перенаправляем пользователя к представлению проекта
         return redirect('apartments:p_view', pk=section.project.pk)  # Используем pk секции для получения проекта
 
-class ToggleVisibilityView(LoginRequiredMixin, View):
-    def post(self, request, pk, model):
-        if model == 'section':
-            section = Section.objects.get(pk=pk)
-            section.is_visible = not section.is_visible
-            section.save()
-        elif model == 'floor':
-            floor = Floor.objects.get(pk=pk)
-            floor.is_visible = not floor.is_visible
-            floor.save()
-        elif model == 'apartment':
-            apartment = Apartment.objects.get(pk=pk)
-            apartment.is_visible = not apartment.is_visible
-            apartment.save()
-        return redirect(request.META.get('HTTP_REFERER', 'apartments:index'))
-
 
 class FloorCreateView(CreateView):
     model = Floor
@@ -338,6 +302,27 @@ class FloorDuplicateView(LoginRequiredMixin, View):
 
 
 
+class ApartmentDefaultView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        # Получаем объект этажа по первичному ключу
+        floor = get_object_or_404(Floor, pk=pk)
+        max_number = Apartment.objects.filter(floor=floor).aggregate(Max('number'))['number__max']
+
+        apartment_number = 1 if max_number is None else max_number + 1
+
+        apartment = Apartment.objects.create(
+            floor=floor,
+            type='1kk',
+            number=apartment_number,
+            small_square=1,
+            shortened_square=1,
+            creator=request.user,
+            is_visible=True)
+
+        # Перенаправляем пользователя к представлению проекта
+        return redirect('apartments:p_view', pk=floor.section.project.pk)
+
+
 class FloorUpdateView(UpdateView):
     model = Floor
     fields = ['name', 'count_floor', 'section', ]
@@ -375,6 +360,7 @@ class ApartmentCreateView(CreateView):
         apartment = form.save()
         return HttpResponseRedirect(reverse('apartments:p_view', args=[apartment.floor.section.project.pk]))
         return super().form_valid(form)
+
 
 
 class ApartmentUpdateView(UpdateView):
@@ -422,76 +408,59 @@ def export_excel(request):
 
     return response
 
-"""def import_excel(request):
-    if request.method == 'POST' and request.FILES['file']:
-        file = request.FILES['file']
-        df = pd.read_excel(file)
-
-        for _, row in df.iterrows():
-            project, created = Project.objects.get_or_create(name=row['Project Name'])
-            section, _ = Section.objects.get_or_create(name=row['Section Name'], project=project)
-            floor, _ = Floor.objects.get_or_create(name=row['Floor Name'], section=section)
-            Apartment.objects.get_or_create(
-                type=row['Apartment Type'],
-                number=row['Apartment Number'],
-                small_square=row['Small Square'],
-                shortened_square=row['Shortened Square'],
-                full_square=row['Full Square'],
-                floor=floor
-            )
-
-        return render(request, 'import_result.html', {'message': 'Import successful!'})
-
-    return render(request, 'import_excel.html')
-"""
-
-
 def import_excel(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            df = pd.read_excel(file)
 
+            # Проверка наличия необходимых колонок
+            required_columns = ['Project Name', 'Section Name', 'Floor Name', 'Apartment Type',
+                                'Apartment Number', 'Small Square', 'Shortened Square', 'Full Square']
+            for column in required_columns:
+                if column not in df.columns:
+                    messages.error(request, f"Отсутствует колонка: {column}")
+                    return redirect('apartments:index')
 
-    if request.method == 'POST' and request.FILES['excel_file']:  # Изменено с 'file' на 'excel_file'
-        file = request.FILES['excel_file']  # Изменено с 'file' на 'excel_file'
-        df = pd.read_excel(file)
-        for _, row in df.iterrows():
-            # Получаем или создаем проект
-            project, created = Project.objects.get_or_create(name=row['Project Name'])
-            # Получаем или создаем секцию
-            section, created = Section.objects.get_or_create(name=row['Section Name'], project=project)
-            # Получаем или создаем этаж
-            floor, created = Floor.objects.get_or_create(name=row['Floor Name'], section=section)
-            # Получаем или создаем квартиру
-            Apartment.objects.get_or_create(
-                type=row['Apartment Type'],
-                number=row['Apartment Number'],
-                small_square=row['Small Square'],
-                shortened_square=row['Shortened Square'],
-                full_square=row['Full Square'],
-                floor=floor
-            )
-        return HttpResponse("Данные успешно импортированы.")
-    return render(request, 'import_excel.html')
+            # Обработка данных из файла
+            for index, row in df.iterrows():
+                project_name = row['Project Name']
+                section_name = row['Section Name']
+                floor_name = row['Floor Name']
+                apartment_type = row['Apartment Type']
+                apartment_number = row['Apartment Number']
+                small_square = row['Small Square']
+                shortened_square = row['Shortened Square']
+                full_square = row['Full Square']
 
+                # Создание/обновление проекта
+                project, created = Project.objects.get_or_create(name=project_name, creator=request.user)
 
-def your_import_view(request):
-    if request.method == 'POST' and request.FILES['excel_file']:  # Изменено с 'file' на 'excel_file'
-        file = request.FILES['excel_file']  # Изменено с 'file' на 'excel_file'
-        df = pd.read_excel(file)
-        for _, row in df.iterrows():
-            # Получаем или создаем проект
-            project, created = Project.objects.get_or_create(name=row['Project Name'])
-            # Получаем или создаем секцию
-            section, created = Section.objects.get_or_create(name=row['Section Name'], project=project)
-            # Получаем или создаем этаж
-            floor, created = Floor.objects.get_or_create(name=row['Floor Name'], section=section)
-            # Получаем или создаем квартиру
-            Apartment.objects.get_or_create(
-                type=row['Apartment Type'],
-                number=row['Apartment Number'],
-                small_square=row['Small Square'],
-                shortened_square=row['Shortened Square'],
-                full_square=row['Full Square'],
-                floor=floor
-            )
-        return HttpResponse("Данные успешно импортированы.")
-    return render(request, 'import_excel.html')
+                # Создание/обновление секции
+                section, created = Section.objects.get_or_create(name=section_name, project=project,
+                                                                 creator=request.user)
 
+                # Создание/обновление этажа
+                floor, created = Floor.objects.get_or_create(name=floor_name, section=section, creator=request.user)
+
+                # Создание квартиры
+                Apartment.objects.update_or_create(
+                    number=apartment_number,
+                    floor=floor,
+                    defaults={
+                        'type': apartment_type,
+                        'small_square': small_square,
+                        'shortened_square': shortened_square,
+                        'full_square': full_square,
+                        'floor': floor,
+                        'creator': request.user,
+                    }
+                )
+
+            messages.success(request, "Данные успешно загружены!")
+            return redirect('apartments:index')
+    else:
+        form = UploadFileForm()
+
+    return render(request, 'apartments/upload_excel.html', {'form': form})

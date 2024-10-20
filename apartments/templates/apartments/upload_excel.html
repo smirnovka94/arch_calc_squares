@@ -1,0 +1,13 @@
+{% extends 'apartments/base.html' %}
+
+{% block content %}
+<h2>Загрузить Excel файл</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="formFileMultiple" class="form-label">Input Excel file</label>
+        <input name="file" class="form-control" type="file" id="formFileMultiple" accept=".xls,.xlsx" required>  <!-- Имя изменено на "excel_file" -->
+    </div>
+    <button type="submit" class="btn btn-primary">Загрузить</button>
+</form>
+{% endblock %}

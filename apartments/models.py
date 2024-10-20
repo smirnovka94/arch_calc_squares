@@ -7,52 +7,6 @@ from django.dispatch import receiver
 NULLABLE = {'blank': True, 'null': True}
 
 
-"""class Project(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Имя проекта')
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE,
-                                verbose_name='автор')
-
-    def __str__(self):
-        return self.name
-
-    def s_count(self):
-        s_count = 0
-        sections = Section.objects.filter(project=self)
-        for section in sections:
-            floors = Floor.objects.filter(section=section)
-            for floor in floors:
-                count_floor = floor.count_floor
-                apartments = Apartment.objects.filter(floor=floor, type='s')  # Только студии
-                s_count += sum(count_floor for _ in apartments)  # Учитываем количество этажей
-        return s_count
-
-    def sum_count(self):
-        total_count = 0
-        sections = Section.objects.filter(project=self)
-        for section in sections:
-            floors = Floor.objects.filter(section=section)
-            for floor in floors:
-                count_floor = floor.count_floor
-                apartments = Apartment.objects.filter(floor=floor)
-                total_count += sum(count_floor for _ in apartments)  # Учитываем количество этажей
-        return total_count
-
-    def sum_small_square(self):
-        total_small_square = 0
-        sections = Section.objects.filter(project=self)
-        for section in sections:
-            floors = Floor.objects.filter(section=section)
-            for floor in floors:
-                count_floor = floor.count_floor
-                apartments = Apartment.objects.filter(floor=floor)
-                total_small_square += sum(
-                    apartment.small_square * count_floor for apartment in apartments)  # Учитываем площадь квартир
-        return total_small_square
-
-    class Meta:
-        verbose_name = 'Проект'
-        verbose_name_plural = 'проекты'
-"""
 class Project(models.Model):
     name = models.CharField(max_length=100, verbose_name='Имя проекта')
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name='автор')
@@ -930,9 +884,19 @@ class Apartment(models.Model):
 @receiver(pre_save, sender=Section)
 def set_section_name(sender, instance, **kwargs):
     if instance.name:
-        instance.name = f"{instance.project.name}_{instance.name}"
+        if '_' in instance.name:
+            pre_fix = instance.name.rsplit('_', 1)[0]
+            if pre_fix in instance.name:
+                instance.name = f"{instance.name}"
+        else:
+            instance.name = f"{instance.section.name}_{instance.name}"
 
 @receiver(pre_save, sender=Floor)
 def set_floor_name(sender, instance, **kwargs):
     if instance.name:
-        instance.name = f"{instance.section.name}_{instance.name}"
+        if '_' in instance.name:
+            pre_fix = instance.name.rsplit('_', 1)[0]
+            if pre_fix in instance.name:
+                instance.name = f"{instance.name}"
+        else:
+            instance.name = f"{instance.section.name}_{instance.name}"

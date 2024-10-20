@@ -1,8 +1,8 @@
 from django.urls import path
 from django.views.decorators.cache import cache_page
 from django.urls import path
-from apartments.views import (SectionDuplicateView, ToggleVisibilityView, ProjectDuplicateView, FloorDuplicateView,
-                              export_excel, import_excel, your_import_view)
+from apartments.views import (SectionDuplicateView, ProjectDuplicateView, FloorDuplicateView,
+                              ApartmentDefaultView, export_excel, import_excel)
 
 
 from apartments.apps import ApartmentsConfig
@@ -25,7 +25,7 @@ urlpatterns = [
     path('project/<int:pk>/duplicate/', ProjectDuplicateView.as_view(), name='project_duplicate'),
     path('section/<int:pk>/duplicate/', SectionDuplicateView.as_view(), name='section_duplicate'),
     path('floor/<int:pk>/duplicate/', FloorDuplicateView.as_view(), name='floor_duplicate'),
-    path('toggle-visibility/<int:pk>/<str:model>/', ToggleVisibilityView.as_view(), name='toggle_visibility'),
+    path('apartment/<int:pk>/default/', ApartmentDefaultView.as_view(), name='apartment_default'),
 
     path('project/create', ProjectCreateView.as_view(), name='p_create'),
     path('project/list/', ProjectListView.as_view(), name='p_list'),
@@ -49,6 +49,7 @@ urlpatterns = [
 
     path('export/', export_excel, name='export_excel'),
     path('import/', import_excel, name='import_excel'),
+    # path('upload/', upload_excel, name='upload_excel'),
     # path('import2/', your_import_view, name='your_import_view'),
 
 ]
